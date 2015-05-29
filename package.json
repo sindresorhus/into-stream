@@ -1,0 +1,46 @@
+{
+  "name": "into-stream",
+  "version": "0.0.0",
+  "description": "Convert a buffer/string/array/object into a stream",
+  "license": "MIT",
+  "repository": "sindresorhus/into-stream",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "stream",
+    "buffer",
+    "string",
+    "object",
+    "array",
+    "from",
+    "into",
+    "to",
+    "transform",
+    "convert",
+    "readable",
+    "pull",
+    "gulpfriendly",
+    "value",
+    "str"
+  ],
+  "dependencies": {
+    "from2": "^1.3.0"
+  },
+  "devDependencies": {
+    "ava": "0.0.4",
+    "buffer-equals": "^1.0.3",
+    "concat-stream": "^1.4.8"
+  }
+}
