@@ -2,36 +2,36 @@
 var from = require('from2');
 
 module.exports = function (x) {
-	return from(function (size, next) {
+	return from(function (size, cb) {
 		if (x.length === 0) {
-			this.push(null);
+			cb(null, null);
 			return;
 		}
 
 		if (Array.isArray(x)) {
-			next(null, x.shift());
+			cb(null, x.shift());
 			return;
 		}
 
 		var chunk = x.slice(0, size);
 		x = x.slice(size);
-		next(null, chunk);
+		cb(null, chunk);
 	});
 };
 
 module.exports.obj = function (x) {
-	return from.obj(function (size, next) {
+	return from.obj(function (size, cb) {
 		if (Array.isArray(x)) {
 			if (x.length === 0) {
-				this.push(null);
+				cb(null, null);
 				return;
 			}
 
-			next(null, x.shift());
+			cb(null, x.shift());
 			return;
 		}
 
 		this.push(x);
-		next(null, null);
+		cb(null, null);
 	});
 };
