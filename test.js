@@ -1,54 +1,27 @@
 import test from 'ava';
-import concatStream from 'concat-stream';
+import getStream from 'get-stream';
 import bufferEquals from 'buffer-equals';
 import m from './';
 
 const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
 
-test.cb('string', t => {
-	t.plan(1);
-
-	m(fixture).pipe(concatStream(data => {
-		t.is(data.toString(), fixture);
-		t.end();
-	}));
+test('string', async t => {
+	t.is(await getStream(m(fixture)), fixture);
 });
 
-test.cb('buffer', t => {
-	t.plan(1);
-
+test('buffer', async t => {
 	const f = new Buffer(fixture);
-
-	m(f).pipe(concatStream(data => {
-		t.true(bufferEquals(data, f));
-		t.end();
-	}));
+	t.true(bufferEquals(await getStream.buffer(m(f)), f));
 });
 
-test.cb('array', t => {
-	t.plan(1);
-
-	m(fixture.split(''))
-	.pipe(concatStream(data => {
-		t.is(data.toString(), fixture);
-		t.end();
-	}));
+test('array', async t => {
+	t.is(await getStream(m(fixture.split(''))), fixture);
 });
 
-test.cb('object mode', t => {
-	t.plan(1);
+test('object mode', async t => {
+	const f = {foo: true};
+	t.deepEqual(await getStream.array(m.obj(f)), [f]);
 
-	// m.obj({foo: true})
-	// .pipe(concatStream({encoding: 'object'}, data => {
-	// 	t.truthy(data[0].foo);
-	// 	t.end();
-	// }));
-
-	const f = [{foo: true}, {bar: true}];
-
-	m.obj(f)
-	.pipe(concatStream({encoding: 'object'}, data => {
-		t.deepEqual(data, f);
-		t.end();
-	}));
+	const f2 = [{foo: true}, {bar: true}];
+	t.deepEqual(await getStream.array(m.obj(f2)), f2);
 });
