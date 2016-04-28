@@ -1,6 +1,6 @@
 {
   "name": "into-stream",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Convert a buffer/string/array/object into a stream",
   "license": "MIT",
   "repository": "sindresorhus/into-stream",
