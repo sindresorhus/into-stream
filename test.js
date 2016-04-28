@@ -1,49 +1,54 @@
-'use strict';
-var test = require('ava');
-var concatStream = require('concat-stream');
-var bufferEquals = require('buffer-equals');
-var intoStream = require('./');
+import test from 'ava';
+import concatStream from 'concat-stream';
+import bufferEquals from 'buffer-equals';
+import m from './';
 
-var fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
+const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
 
-test('string', function (t) {
+test.cb('string', t => {
 	t.plan(1);
 
-	intoStream(fixture).pipe(concatStream(function (data) {
-		t.assert(data.toString() === fixture);
+	m(fixture).pipe(concatStream(data => {
+		t.is(data.toString(), fixture);
+		t.end();
 	}));
 });
 
-test('buffer', function (t) {
+test.cb('buffer', t => {
 	t.plan(1);
 
-	var f = new Buffer(fixture);
+	const f = new Buffer(fixture);
 
-	intoStream(f).pipe(concatStream(function (data) {
-		t.assert(bufferEquals(data, f));
+	m(f).pipe(concatStream(data => {
+		t.true(bufferEquals(data, f));
+		t.end();
 	}));
 });
 
-test('array', function (t) {
+test.cb('array', t => {
 	t.plan(1);
 
-	intoStream(fixture.split(''))
-	.pipe(concatStream(function (data) {
-		t.assert(data.toString() === fixture);
+	m(fixture.split(''))
+	.pipe(concatStream(data => {
+		t.is(data.toString(), fixture);
+		t.end();
 	}));
 });
 
-test('object mode', function (t) {
-	t.plan(2);
+test.cb('object mode', t => {
+	t.plan(1);
 
-	intoStream.obj({foo: true})
-	.pipe(concatStream({encoding: 'object'}, function (data) {
-		t.assert(data[0].foo);
-	}));
+	// m.obj({foo: true})
+	// .pipe(concatStream({encoding: 'object'}, data => {
+	// 	t.truthy(data[0].foo);
+	// 	t.end();
+	// }));
 
-	intoStream.obj([{foo: true}, {bar: true}])
-	.pipe(concatStream({encoding: 'object'}, function (data) {
-		t.assert(data[0].foo);
-		t.assert(data[0].bar);
+	const f = [{foo: true}, {bar: true}];
+
+	m.obj(f)
+	.pipe(concatStream({encoding: 'object'}, data => {
+		t.deepEqual(data, f);
+		t.end();
 	}));
 });

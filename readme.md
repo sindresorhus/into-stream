@@ -15,7 +15,7 @@ $ npm install --save into-stream
 ## Usage
 
 ```js
-var intoStream = require('into-stream');
+const intoStream = require('into-stream');
 
 intoStream('unicorn').pipe(process.stdout);
 //=> 'unicorn'
@@ -26,17 +26,17 @@ intoStream('unicorn').pipe(process.stdout);
 
 ### intoStream(input)
 
-Type: `buffer`, `string`, `array` of (`buffer`, `string`)  
+Type: `buffer` `string` `array<buffer|string>`<br>
 Returns: [Readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable)
 
 Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
 ### intoStream.obj(input)
 
-Type: `object`, `array` of `object`  
+Type: `object`, `array<object>`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
 
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

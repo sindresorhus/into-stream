@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -36,11 +36,12 @@
     "str"
   ],
   "dependencies": {
-    "from2": "^2.0.3"
+    "from2": "^2.1.1"
   },
   "devDependencies": {
-    "ava": "0.0.4",
+    "ava": "*",
     "buffer-equals": "^1.0.3",
-    "concat-stream": "^1.4.8"
+    "concat-stream": "^1.4.8",
+    "xo": "*"
   }
 }

@@ -2,6 +2,10 @@
 var from = require('from2');
 
 module.exports = function (x) {
+	if (Array.isArray(x)) {
+		x = x.slice();
+	}
+
 	return from(function (size, cb) {
 		if (x.length === 0) {
 			cb(null, null);
@@ -20,6 +24,10 @@ module.exports = function (x) {
 };
 
 module.exports.obj = function (x) {
+	if (Array.isArray(x)) {
+		x = x.slice();
+	}
+
 	return from.obj(function (size, cb) {
 		if (Array.isArray(x)) {
 			if (x.length === 0) {
