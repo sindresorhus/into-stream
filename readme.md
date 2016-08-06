@@ -36,7 +36,6 @@ Adheres to the requested chunk size, except for `array` where each element will 
 Type: `object`, `array<object>`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
 
-
 ## License
 
 MIT © [Sindre Sorhus](https://sindresorhus.com)

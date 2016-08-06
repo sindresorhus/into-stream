@@ -1,7 +1,9 @@
 'use strict';
 var from = require('from2');
 
-module.exports = function (x) {
+module.exports = function (x, opts) {
+	opts = opts || {};
+
 	if (Array.isArray(x)) {
 		x = x.slice();
 	}
@@ -19,11 +21,14 @@ module.exports = function (x) {
 
 		var chunk = x.slice(0, size);
 		x = x.slice(size);
-		cb(null, chunk);
+
+		setImmediate(cb, null, chunk);
 	});
 };
 
-module.exports.obj = function (x) {
+module.exports.obj = function (x, opts) {
+	opts = opts || {};
+
 	if (Array.isArray(x)) {
 		x = x.slice();
 	}
@@ -40,6 +45,7 @@ module.exports.obj = function (x) {
 		}
 
 		this.push(x);
-		cb(null, null);
+
+		setImmediate(cb, null, null);
 	});
 };
