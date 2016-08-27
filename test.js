@@ -25,3 +25,17 @@ test('object mode', async t => {
 	const f2 = [{foo: true}, {bar: true}];
 	t.deepEqual(await getStream.array(m.obj(f2)), f2);
 });
+
+test.cb('pushes chunk on next frame', t => {
+	const f = new Buffer(fixture);
+	let flag = false;
+
+	setImmediate(() => {
+		flag = true;
+	});
+
+	m(f).on('data', function () {
+		t.truthy(flag);
+		t.end();
+	});
+});
