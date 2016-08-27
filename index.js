@@ -1,14 +1,12 @@
 'use strict';
-var from = require('from2');
+const from = require('from2');
 
-module.exports = function (x, opts) {
-	opts = opts || {};
-
+module.exports = x => {
 	if (Array.isArray(x)) {
 		x = x.slice();
 	}
 
-	return from(function (size, cb) {
+	return from((size, cb) => {
 		if (x.length === 0) {
 			cb(null, null);
 			return;
@@ -19,16 +17,14 @@ module.exports = function (x, opts) {
 			return;
 		}
 
-		var chunk = x.slice(0, size);
+		const chunk = x.slice(0, size);
 		x = x.slice(size);
 
 		setImmediate(cb, null, chunk);
 	});
 };
 
-module.exports.obj = function (x, opts) {
-	opts = opts || {};
-
+module.exports.obj = x => {
 	if (Array.isArray(x)) {
 		x = x.slice();
 	}

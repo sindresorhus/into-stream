@@ -26,7 +26,7 @@ intoStream('unicorn').pipe(process.stdout);
 
 ### intoStream(input)
 
-Type: `buffer` `string` `array<buffer|string>`<br>
+Type: `Buffer` `string` `Array<Buffer|string>`<br>
 Returns: [Readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable)
 
 Adheres to the requested chunk size, except for `array` where each element will be a chunk.
@@ -35,6 +35,7 @@ Adheres to the requested chunk size, except for `array` where each element will 
 
 Type: `object`, `array<object>`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
+
 
 ## License
 
