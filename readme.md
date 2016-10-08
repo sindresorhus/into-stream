@@ -26,14 +26,14 @@ intoStream('unicorn').pipe(process.stdout);
 
 ### intoStream(input)
 
-Type: `Buffer` `string` `Iterable<Buffer|string>`<br>
+Type: `Buffer` `string` `Iterable<Buffer|string>` `Promise`<br>
 Returns: [Readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable)
 
 Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
 ### intoStream.obj(input)
 
-Type: `Object`, `Iterable<Object>`<br>
+Type: `Object`, `Iterable<Object>` `Promise`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
 
 

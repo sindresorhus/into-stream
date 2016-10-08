@@ -1,16 +1,37 @@
 'use strict';
 const from = require('from2');
+const isPromise = require('is-promise');
 
 module.exports = x => {
 	if (Array.isArray(x)) {
 		x = x.slice();
 	}
 
-	// We don't iterate on strings and buffers since slicing them is ~7x faster
-	const shouldIterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
-	const iterator = shouldIterate ? x[Symbol.iterator]() : null;
+	let pendingPromise = isPromise(x) ? x : null;
+	let shouldIterate;
+	let iterator;
 
-	return from((size, cb) => {
+	if (!pendingPromise) {
+		decideIteration();
+	}
+
+	function decideIteration() {
+		// We don't iterate on strings and buffers since slicing them is ~7x faster.
+		shouldIterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
+		iterator = shouldIterate ? x[Symbol.iterator]() : null;
+	}
+
+	return from(function reader(size, cb) {
+		if (pendingPromise) {
+			pendingPromise.then(result => {
+				x = result;
+				pendingPromise = null;
+				decideIteration();
+				reader.call(this, size, cb);
+			}, cb);
+			return;
+		}
+
 		if (shouldIterate) {
 			const obj = iterator.next();
 			setImmediate(cb, null, obj.done ? null : obj.value);
@@ -34,9 +55,28 @@ module.exports.obj = x => {
 		x = x.slice();
 	}
 
-	const iterator = x[Symbol.iterator] ? x[Symbol.iterator]() : null;
+	let pendingPromise = isPromise(x) ? x : null;
+	let iterator;
 
-	return from.obj(function (size, cb) {
+	if (!pendingPromise) {
+		decideIteration();
+	}
+
+	function decideIteration() {
+		iterator = x[Symbol.iterator] ? x[Symbol.iterator]() : null;
+	}
+
+	return from.obj(function reader(size, cb) {
+		if (pendingPromise) {
+			pendingPromise.then(result => {
+				x = result;
+				pendingPromise = null;
+				decideIteration();
+				reader.call(this, size, cb);
+			}, cb);
+			return;
+		}
+
 		if (iterator) {
 			const obj = iterator.next();
 			setImmediate(cb, null, obj.done ? null : obj.value);
