@@ -1,12 +1,23 @@
 'use strict';
 const from = require('from2');
+const isIterable = require('is-iterable');
 
 module.exports = x => {
+	let iterator;
+
 	if (Array.isArray(x)) {
 		x = x.slice();
+	} else if (!(x && x.slice) && isIterable(x)) {
+		iterator = x[Symbol.iterator]();
 	}
 
 	return from((size, cb) => {
+		if (iterator) {
+			let obj = iterator.next();
+			cb(null, obj.done ? null : obj.value);
+			return;
+		}
+
 		if (x.length === 0) {
 			cb(null, null);
 			return;
@@ -25,11 +36,21 @@ module.exports = x => {
 };
 
 module.exports.obj = x => {
+	let iterator;
+
 	if (Array.isArray(x)) {
 		x = x.slice();
+	} else if (isIterable(x)) {
+		iterator = x[Symbol.iterator]();
 	}
 
 	return from.obj(function (size, cb) {
+		if (iterator) {
+			let obj = iterator.next();
+			cb(null, obj.done ? null : obj.value);
+			return;
+		}
+
 		if (Array.isArray(x)) {
 			if (x.length === 0) {
 				cb(null, null);

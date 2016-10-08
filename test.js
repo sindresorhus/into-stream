@@ -18,12 +18,38 @@ test('array', async t => {
 	t.is(await getStream(m(fixture.split(''))), fixture);
 });
 
+test('iterable', async t => {
+	const iterable = {
+		val: fixture.split(''),
+		[Symbol.iterator]: function *() {
+			let i = 0;
+			while (i < this.val.length) {
+				yield this.val[i++];
+			}
+		}
+	};
+	t.is(await getStream(m(iterable)), fixture);
+});
+
 test('object mode', async t => {
 	const f = {foo: true};
 	t.deepEqual(await getStream.array(m.obj(f)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
 	t.deepEqual(await getStream.array(m.obj(f2)), f2);
+});
+
+test('object mode from iterable', async t => {
+	const iterable = {
+		val: [{foo: true}, {bar: true}],
+		[Symbol.iterator]: function *() {
+			let i = 0;
+			while (i < this.val.length) {
+				yield this.val[i++];
+			}
+		}
+	};
+	t.deepEqual(await getStream.array(m.obj(iterable)), iterable.val);
 });
 
 test.cb('pushes chunk on next tick', t => {

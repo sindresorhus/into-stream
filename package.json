@@ -36,7 +36,8 @@
     "str"
   ],
   "dependencies": {
-    "from2": "^2.1.1"
+    "from2": "^2.1.1",
+    "is-iterable": "^1.1.0"
   },
   "devDependencies": {
     "ava": "*",
