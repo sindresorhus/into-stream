@@ -1,30 +1,23 @@
 'use strict';
 const from = require('from2');
-const isIterable = require('is-iterable');
 
 module.exports = x => {
-	let iterator;
-
 	if (Array.isArray(x)) {
 		x = x.slice();
-	} else if (!(x && x.slice) && isIterable(x)) {
-		iterator = x[Symbol.iterator]();
 	}
 
+	const iterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
+	const iterator = iterate ? x[Symbol.iterator]() : null;
+
 	return from((size, cb) => {
-		if (iterator) {
-			let obj = iterator.next();
+		if (iterate) {
+			const obj = iterator.next();
 			cb(null, obj.done ? null : obj.value);
 			return;
 		}
 
 		if (x.length === 0) {
 			cb(null, null);
-			return;
-		}
-
-		if (Array.isArray(x)) {
-			cb(null, x.shift());
 			return;
 		}
 
@@ -36,28 +29,16 @@ module.exports = x => {
 };
 
 module.exports.obj = x => {
-	let iterator;
-
 	if (Array.isArray(x)) {
 		x = x.slice();
-	} else if (isIterable(x)) {
-		iterator = x[Symbol.iterator]();
 	}
+
+	const iterator = x[Symbol.iterator] ? x[Symbol.iterator]() : null;
 
 	return from.obj(function (size, cb) {
 		if (iterator) {
-			let obj = iterator.next();
+			const obj = iterator.next();
 			cb(null, obj.done ? null : obj.value);
-			return;
-		}
-
-		if (Array.isArray(x)) {
-			if (x.length === 0) {
-				cb(null, null);
-				return;
-			}
-
-			cb(null, x.shift());
 			return;
 		}
 
