@@ -12,7 +12,7 @@ module.exports = x => {
 	return from((size, cb) => {
 		if (iterate) {
 			const obj = iterator.next();
-			cb(null, obj.done ? null : obj.value);
+			setImmediate(cb, null, obj.done ? null : obj.value);
 			return;
 		}
 
@@ -38,7 +38,7 @@ module.exports.obj = x => {
 	return from.obj(function (size, cb) {
 		if (iterator) {
 			const obj = iterator.next();
-			cb(null, obj.done ? null : obj.value);
+			setImmediate(cb, null, obj.done ? null : obj.value);
 			return;
 		}
 
