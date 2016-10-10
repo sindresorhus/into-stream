@@ -33,7 +33,7 @@ Adheres to the requested chunk size, except for `array` where each element will 
 
 ### intoStream.obj(input)
 
-Type: `object`, `Iterable<object>`<br>
+Type: `object`, `Iterable<Object>`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
 
 

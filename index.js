@@ -6,18 +6,19 @@ module.exports = x => {
 		x = x.slice();
 	}
 
-	const iterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
-	const iterator = iterate ? x[Symbol.iterator]() : null;
+	// We don't iterate on strings and buffers since slicing them is ~7x faster.
+	const shouldIterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
+	const iterator = shouldIterate ? x[Symbol.iterator]() : null;
 
 	return from((size, cb) => {
-		if (iterate) {
+		if (shouldIterate) {
 			const obj = iterator.next();
 			setImmediate(cb, null, obj.done ? null : obj.value);
 			return;
 		}
 
 		if (x.length === 0) {
-			cb(null, null);
+			setImmediate(cb, null, null);
 			return;
 		}
 
