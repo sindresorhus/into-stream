@@ -7,7 +7,7 @@ const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenea
 
 function iterableFrom(arr) {
 	return {
-		[Symbol.iterator]: function *() {
+		[Symbol.iterator]: function * () {
 			let i = 0;
 			while (i < arr.length) {
 				yield arr[i++];
