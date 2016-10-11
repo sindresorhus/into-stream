@@ -7,32 +7,26 @@ module.exports = x => {
 		x = x.slice();
 	}
 
-	let pendingPromise = isPromise(x) ? x : null;
-	let shouldIterate;
+	let promise;
 	let iterator;
 
-	if (!pendingPromise) {
-		decideIteration();
-	}
+	prepare(x);
 
-	function decideIteration() {
+	function prepare(value) {
+		x = value;
+		promise = isPromise(x) ? x : null;
 		// We don't iterate on strings and buffers since slicing them is ~7x faster.
-		shouldIterate = x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
+		const shouldIterate = !promise && x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
 		iterator = shouldIterate ? x[Symbol.iterator]() : null;
 	}
 
 	return from(function reader(size, cb) {
-		if (pendingPromise) {
-			pendingPromise.then(result => {
-				x = result;
-				pendingPromise = null;
-				decideIteration();
-				reader.call(this, size, cb);
-			}, cb);
+		if (promise) {
+			promise.then(prepare).then(() => reader.call(this, size, cb), cb);
 			return;
 		}
 
-		if (shouldIterate) {
+		if (iterator) {
 			const obj = iterator.next();
 			setImmediate(cb, null, obj.done ? null : obj.value);
 			return;
@@ -55,25 +49,20 @@ module.exports.obj = x => {
 		x = x.slice();
 	}
 
-	let pendingPromise = isPromise(x) ? x : null;
+	let promise;
 	let iterator;
 
-	if (!pendingPromise) {
-		decideIteration();
-	}
+	prepare(x);
 
-	function decideIteration() {
-		iterator = x[Symbol.iterator] ? x[Symbol.iterator]() : null;
+	function prepare(value) {
+		x = value;
+		promise = isPromise(x) ? x : null;
+		iterator = !promise && x[Symbol.iterator] ? x[Symbol.iterator]() : null;
 	}
 
 	return from.obj(function reader(size, cb) {
-		if (pendingPromise) {
-			pendingPromise.then(result => {
-				x = result;
-				pendingPromise = null;
-				decideIteration();
-				reader.call(this, size, cb);
-			}, cb);
+		if (promise) {
+			promise.then(prepare).then(() => reader.call(this, size, cb), cb);
 			return;
 		}
 
