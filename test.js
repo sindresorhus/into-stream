@@ -1,6 +1,5 @@
 import test from 'ava';
 import getStream from 'get-stream';
-import bufferEquals from 'buffer-equals';
 import m from './';
 
 const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
@@ -22,7 +21,7 @@ test('string', async t => {
 
 test('buffer', async t => {
 	const f = new Buffer(fixture);
-	t.true(bufferEquals(await getStream.buffer(m(f)), f));
+	t.true((await getStream.buffer(m(f))).equals(f));
 });
 
 test('array', async t => {

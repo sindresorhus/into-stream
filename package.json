@@ -1,7 +1,7 @@
 {
   "name": "into-stream",
   "version": "3.0.0",
-  "description": "Convert a buffer/string/array/object into a stream",
+  "description": "Convert a buffer/string/array/object/iterable/promise into a stream",
   "license": "MIT",
   "repository": "sindresorhus/into-stream",
   "author": {
@@ -24,6 +24,9 @@
     "string",
     "object",
     "array",
+    "iterable",
+    "promise",
+    "promises",
     "from",
     "into",
     "to",
@@ -41,8 +44,7 @@
   },
   "devDependencies": {
     "ava": "*",
-    "buffer-equals": "^1.0.3",
-    "get-stream": "^2.1.0",
+    "get-stream": "^3.0.0",
     "xo": "*"
   }
 }

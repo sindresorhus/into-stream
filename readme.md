@@ -1,6 +1,6 @@
 # into-stream [![Build Status](https://travis-ci.org/sindresorhus/into-stream.svg?branch=master)](https://travis-ci.org/sindresorhus/into-stream)
 
-> Convert a buffer/string/array/object into a stream
+> Convert a buffer/string/array/object/iterable/promise into a stream
 
 Correctly chunks up the input and handles backpressure.
 
