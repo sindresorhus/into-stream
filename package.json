@@ -1,6 +1,6 @@
 {
   "name": "into-stream",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Convert a buffer/string/array/object/iterable/promise into a stream",
   "license": "MIT",
   "repository": "sindresorhus/into-stream",
