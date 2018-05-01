@@ -37,6 +37,11 @@ Type: `Object`, `Iterable<Object>` `Promise`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
 
 
+## Related
+
+- [to-readable-stream](https://github.com/sindresorhus/to-readable-stream) - Simpler version of this module
+
+
 ## License
 
 MIT © [Sindre Sorhus](https://sindresorhus.com)
