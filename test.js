@@ -20,7 +20,7 @@ test('string', async t => {
 });
 
 test('buffer', async t => {
-	const f = new Buffer(fixture);
+	const f = Buffer.from(fixture);
 	t.true((await getStream.buffer(m(f))).equals(f));
 });
 
@@ -104,7 +104,7 @@ test.cb('pushes chunk on next tick', t => {
 		flag = true;
 	});
 
-	m(new Buffer(fixture)).on('data', () => {
+	m(Buffer.from(fixture)).on('data', () => {
 		t.true(flag);
 		t.end();
 	});
