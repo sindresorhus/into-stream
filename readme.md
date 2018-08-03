@@ -8,7 +8,7 @@ Correctly chunks up the input and handles backpressure.
 ## Install
 
 ```
-$ npm install --save into-stream
+$ npm install into-stream
 ```
 
 

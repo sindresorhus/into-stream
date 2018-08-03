@@ -2,22 +2,22 @@
 const from = require('from2');
 const pIsPromise = require('p-is-promise');
 
-module.exports = x => {
-	if (Array.isArray(x)) {
-		x = x.slice();
+module.exports = input => {
+	if (Array.isArray(input)) {
+		input = input.slice();
 	}
 
 	let promise;
 	let iterator;
 
-	prepare(x);
+	prepare(input);
 
 	function prepare(value) {
-		x = value;
-		promise = pIsPromise(x) ? x : null;
-		// we don't iterate on strings and buffers since slicing them is ~7x faster
-		const shouldIterate = !promise && x[Symbol.iterator] && typeof x !== 'string' && !Buffer.isBuffer(x);
-		iterator = shouldIterate ? x[Symbol.iterator]() : null;
+		input = value;
+		promise = pIsPromise(input) ? input : null;
+		// We don't iterate on strings and buffers since slicing them is ~7x faster
+		const shouldIterate = !promise && input[Symbol.iterator] && typeof input !== 'string' && !Buffer.isBuffer(input);
+		iterator = shouldIterate ? input[Symbol.iterator]() : null;
 	}
 
 	return from(function reader(size, cb) {
@@ -32,32 +32,32 @@ module.exports = x => {
 			return;
 		}
 
-		if (x.length === 0) {
+		if (input.length === 0) {
 			setImmediate(cb, null, null);
 			return;
 		}
 
-		const chunk = x.slice(0, size);
-		x = x.slice(size);
+		const chunk = input.slice(0, size);
+		input = input.slice(size);
 
 		setImmediate(cb, null, chunk);
 	});
 };
 
-module.exports.obj = x => {
-	if (Array.isArray(x)) {
-		x = x.slice();
+module.exports.obj = input => {
+	if (Array.isArray(input)) {
+		input = input.slice();
 	}
 
 	let promise;
 	let iterator;
 
-	prepare(x);
+	prepare(input);
 
 	function prepare(value) {
-		x = value;
-		promise = pIsPromise(x) ? x : null;
-		iterator = !promise && x[Symbol.iterator] ? x[Symbol.iterator]() : null;
+		input = value;
+		promise = pIsPromise(input) ? input : null;
+		iterator = !promise && input[Symbol.iterator] ? input[Symbol.iterator]() : null;
 	}
 
 	return from.obj(function reader(size, cb) {
@@ -72,7 +72,7 @@ module.exports.obj = x => {
 			return;
 		}
 
-		this.push(x);
+		this.push(input);
 
 		setImmediate(cb, null, null);
 	});
