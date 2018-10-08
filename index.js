@@ -14,6 +14,9 @@ module.exports = input => {
 
 	function prepare(value) {
 		input = value;
+		// Convert other buffer types to Buffer
+		input = input instanceof ArrayBuffer ? Buffer.from(input) : input;
+		input = !Buffer.isBuffer(input) && ArrayBuffer.isView(input) ? Buffer.from(input) : input;
 		promise = pIsPromise(input) ? input : null;
 		// We don't iterate on strings and buffers since slicing them is ~7x faster
 		const shouldIterate = !promise && input[Symbol.iterator] && typeof input !== 'string' && !Buffer.isBuffer(input);
