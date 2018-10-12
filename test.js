@@ -1,6 +1,7 @@
 import test from 'ava';
 import getStream from 'get-stream';
-import m from '.';
+import pEvent from 'p-event';
+import intoStream from '.';
 
 const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
 
@@ -16,12 +17,12 @@ function iterableFrom(arr) {
 }
 
 test('string', async t => {
-	t.is(await getStream(m(fixture)), fixture);
+	t.is(await getStream(intoStream(fixture)), fixture);
 });
 
 test('buffer', async t => {
 	const f = Buffer.from(fixture);
-	t.true((await getStream.buffer(m(f))).equals(f));
+	t.true((await getStream.buffer(intoStream(f))).equals(f));
 });
 
 test('ArrayBuffer', async t => {
@@ -30,7 +31,7 @@ test('ArrayBuffer', async t => {
 	for (let i = 0; i < f.length; i++) {
 		view[i] = f[i];
 	}
-	t.true((await getStream.buffer(m(view.buffer))).equals(f));
+	t.true((await getStream.buffer(intoStream(view.buffer))).equals(f));
 });
 
 test('ArrayBuffer view', async t => {
@@ -39,51 +40,51 @@ test('ArrayBuffer view', async t => {
 	for (let i = 0; i < f.length; i++) {
 		view[i] = f[i];
 	}
-	t.true((await getStream.buffer(m(view))).equals(f));
+	t.true((await getStream.buffer(intoStream(view))).equals(f));
 });
 
 test('array', async t => {
-	t.is(await getStream(m(fixture.split(''))), fixture);
+	t.is(await getStream(intoStream(fixture.split(''))), fixture);
 });
 
 test('iterable', async t => {
 	const iterable = iterableFrom(fixture.split(''));
-	t.is(await getStream(m(iterable)), fixture);
+	t.is(await getStream(intoStream(iterable)), fixture);
 });
 
 test('promise', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, fixture));
 	});
-	t.is(await getStream(m(promise)), fixture);
+	t.is(await getStream(intoStream(promise)), fixture);
 });
 
 test('promise resolving to iterable', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, iterableFrom(fixture.split(''))));
 	});
-	t.is(await getStream(m(promise)), fixture);
+	t.is(await getStream(intoStream(promise)), fixture);
 });
 
 test('stream errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throws(getStream(m(promise)), 'test error');
+	await t.throws(getStream(intoStream(promise)), 'test error');
 });
 
 test('object mode', async t => {
 	const f = {foo: true};
-	t.deepEqual(await getStream.array(m.obj(f)), [f]);
+	t.deepEqual(await getStream.array(intoStream.obj(f)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
-	t.deepEqual(await getStream.array(m.obj(f2)), f2);
+	t.deepEqual(await getStream.array(intoStream.obj(f2)), f2);
 });
 
 test('object mode from iterable', async t => {
 	const values = [{foo: true}, {bar: true}];
 	const iterable = iterableFrom(values);
-	t.deepEqual(await getStream.array(m.obj(iterable)), values);
+	t.deepEqual(await getStream.array(intoStream.obj(iterable)), values);
 });
 
 test('object mode from promise', async t => {
@@ -91,13 +92,13 @@ test('object mode from promise', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f));
 	});
-	t.deepEqual(await getStream.array(m.obj(promise)), [f]);
+	t.deepEqual(await getStream.array(intoStream.obj(promise)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
 	const promise2 = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f2));
 	});
-	t.deepEqual(await getStream.array(m.obj(promise2)), f2);
+	t.deepEqual(await getStream.array(intoStream.obj(promise2)), f2);
 });
 
 test('object mode from promise resolving to iterable', async t => {
@@ -105,25 +106,24 @@ test('object mode from promise resolving to iterable', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, iterableFrom([{foo: true}, {bar: true}])));
 	});
-	t.deepEqual(await getStream.array(m.obj(promise)), values);
+	t.deepEqual(await getStream.array(intoStream.obj(promise)), values);
 });
 
 test('object mode errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throws(getStream.array(m.obj(promise)), 'test error');
+	await t.throws(getStream.array(intoStream.obj(promise)), 'test error');
 });
 
-test.cb('pushes chunk on next tick', t => {
+test('pushes chunk on next tick', async t => {
 	let flag = false;
 
 	setImmediate(() => {
 		flag = true;
 	});
 
-	m(Buffer.from(fixture)).on('data', () => {
-		t.true(flag);
-		t.end();
-	});
+	await pEvent(intoStream(Buffer.from(fixture)), 'data');
+
+	t.true(flag);
 });
