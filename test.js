@@ -24,6 +24,24 @@ test('buffer', async t => {
 	t.true((await getStream.buffer(m(f))).equals(f));
 });
 
+test('ArrayBuffer', async t => {
+	const f = Buffer.from(fixture);
+	const view = new Uint8Array(f.length);
+	for (let i = 0; i < f.length; i++) {
+		view[i] = f[i];
+	}
+	t.true((await getStream.buffer(m(view.buffer))).equals(f));
+});
+
+test('ArrayBuffer view', async t => {
+	const f = Buffer.from(fixture);
+	const view = new Uint8Array(f.length);
+	for (let i = 0; i < f.length; i++) {
+		view[i] = f[i];
+	}
+	t.true((await getStream.buffer(m(view))).equals(f));
+});
+
 test('array', async t => {
 	t.is(await getStream(m(fixture.split(''))), fixture);
 });
