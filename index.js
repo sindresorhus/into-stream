@@ -2,6 +2,8 @@
 const from = require('from2');
 const pIsPromise = require('p-is-promise');
 
+const {setImmediate} = global; // Avoid conflicts with sinon.useFakeTimers
+
 module.exports = input => {
 	if (Array.isArray(input)) {
 		input = input.slice();
