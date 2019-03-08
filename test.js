@@ -31,6 +31,7 @@ test('ArrayBuffer', async t => {
 	for (let i = 0; i < f.length; i++) {
 		view[i] = f[i];
 	}
+
 	t.true((await getStream.buffer(intoStream(view.buffer))).equals(f));
 });
 
@@ -40,6 +41,7 @@ test('ArrayBuffer view', async t => {
 	for (let i = 0; i < f.length; i++) {
 		view[i] = f[i];
 	}
+
 	t.true((await getStream.buffer(intoStream(view))).equals(f));
 });
 
@@ -70,7 +72,7 @@ test('stream errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throws(getStream(intoStream(promise)), 'test error');
+	await t.throwsAsync(getStream(intoStream(promise)), 'test error');
 });
 
 test('object mode', async t => {
@@ -113,7 +115,7 @@ test('object mode errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throws(getStream.array(intoStream.obj(promise)), 'test error');
+	await t.throwsAsync(getStream.array(intoStream.obj(promise)), 'test error');
 });
 
 test('pushes chunk on next tick', async t => {
