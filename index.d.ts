@@ -1,5 +1,5 @@
 /// <reference types="node"/>
-import {Readable} from 'stream';
+import {Readable as ReadableStream} from 'stream';
 
 export type Input =
 	| Buffer
@@ -19,7 +19,7 @@ declare const intoStream: {
 	 * @param input - The input to convert to a stream.
 	 * @returns A [readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable).
 	 */
-	(input: Input | Promise<Input>): Readable;
+	(input: Input | Promise<Input>): ReadableStream;
 
 	/**
 	 * Convert object `input` into a stream.
@@ -27,7 +27,7 @@ declare const intoStream: {
 	 * @param input - The object input to convert to a stream.
 	 * @returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
 	 */
-	obj(input: InputObject | Promise<InputObject>): Readable;
+	obj(input: InputObject | Promise<InputObject>): ReadableStream;
 };
 
 export default intoStream;
