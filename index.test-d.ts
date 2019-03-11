@@ -26,9 +26,9 @@ const object = {foo: true};
 const objectArray = new Set([object, {bar: true}]);
 const objectIterable = new Set(objectArray);
 
-intoStream.obj(object).pipe(process.stdout);
-intoStream.obj(objectArray).pipe(process.stdout);
-intoStream.obj(objectIterable).pipe(process.stdout);
-intoStream.obj(Promise.resolve(object)).pipe(process.stdout);
-intoStream.obj(Promise.resolve(objectArray)).pipe(process.stdout);
-intoStream.obj(Promise.resolve(objectIterable)).pipe(process.stdout);
+intoStream.object(object).pipe(process.stdout);
+intoStream.object(objectArray).pipe(process.stdout);
+intoStream.object(objectIterable).pipe(process.stdout);
+intoStream.object(Promise.resolve(object)).pipe(process.stdout);
+intoStream.object(Promise.resolve(objectArray)).pipe(process.stdout);
+intoStream.object(Promise.resolve(objectIterable)).pipe(process.stdout);

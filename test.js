@@ -77,16 +77,16 @@ test('stream errors when promise rejects', async t => {
 
 test('object mode', async t => {
 	const f = {foo: true};
-	t.deepEqual(await getStream.array(intoStream.obj(f)), [f]);
+	t.deepEqual(await getStream.array(intoStream.object(f)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
-	t.deepEqual(await getStream.array(intoStream.obj(f2)), f2);
+	t.deepEqual(await getStream.array(intoStream.object(f2)), f2);
 });
 
 test('object mode from iterable', async t => {
 	const values = [{foo: true}, {bar: true}];
 	const iterable = iterableFrom(values);
-	t.deepEqual(await getStream.array(intoStream.obj(iterable)), values);
+	t.deepEqual(await getStream.array(intoStream.object(iterable)), values);
 });
 
 test('object mode from promise', async t => {
@@ -94,13 +94,13 @@ test('object mode from promise', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f));
 	});
-	t.deepEqual(await getStream.array(intoStream.obj(promise)), [f]);
+	t.deepEqual(await getStream.array(intoStream.object(promise)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
 	const promise2 = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f2));
 	});
-	t.deepEqual(await getStream.array(intoStream.obj(promise2)), f2);
+	t.deepEqual(await getStream.array(intoStream.object(promise2)), f2);
 });
 
 test('object mode from promise resolving to iterable', async t => {
@@ -108,14 +108,14 @@ test('object mode from promise resolving to iterable', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, iterableFrom([{foo: true}, {bar: true}])));
 	});
-	t.deepEqual(await getStream.array(intoStream.obj(promise)), values);
+	t.deepEqual(await getStream.array(intoStream.object(promise)), values);
 });
 
 test('object mode errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throwsAsync(getStream.array(intoStream.obj(promise)), 'test error');
+	await t.throwsAsync(getStream.array(intoStream.object(promise)), 'test error');
 });
 
 test('pushes chunk on next tick', async t => {

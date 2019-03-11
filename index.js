@@ -64,7 +64,7 @@ const intoStream = input => {
 module.exports = intoStream;
 module.exports.default = intoStream;
 
-module.exports.obj = input => {
+module.exports.object = input => {
 	if (Array.isArray(input)) {
 		input = input.slice();
 	}

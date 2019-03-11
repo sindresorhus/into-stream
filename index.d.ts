@@ -27,7 +27,7 @@ declare const intoStream: {
 	 * @param input - The object input to convert to a stream.
 	 * @returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
 	 */
-	obj(input: InputObject | Promise<InputObject>): ReadableStream;
+	object(input: InputObject | Promise<InputObject>): ReadableStream;
 };
 
 export default intoStream;

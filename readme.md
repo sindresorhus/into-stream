@@ -31,7 +31,7 @@ Returns: [Readable stream](https://nodejs.org/api/stream.html#stream_class_strea
 
 Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
-### intoStream.obj(input)
+### intoStream.object(input)
 
 Type: `Object`, `Iterable<Object>` `Promise`<br>
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_object_mode)
