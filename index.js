@@ -2,7 +2,7 @@
 const from = require('from2');
 const pIsPromise = require('p-is-promise');
 
-module.exports = input => {
+const intoStream = input => {
 	if (Array.isArray(input)) {
 		input = input.slice();
 	}
@@ -31,7 +31,16 @@ module.exports = input => {
 
 	return from(function reader(size, cb) {
 		if (promise) {
-			promise.then(prepare).then(() => reader.call(this, size, cb), cb);
+			(async () => {
+				try {
+					const value = await promise;
+					await prepare(value);
+					reader.call(this, size, cb);
+				} catch (error) {
+					cb(error);
+				}
+			})();
+
 			return;
 		}
 
@@ -53,6 +62,9 @@ module.exports = input => {
 	});
 };
 
+module.exports = intoStream;
+module.exports.default = intoStream;
+
 module.exports.obj = input => {
 	if (Array.isArray(input)) {
 		input = input.slice();
@@ -71,7 +83,16 @@ module.exports.obj = input => {
 
 	return from.obj(function reader(size, cb) {
 		if (promise) {
-			promise.then(prepare).then(() => reader.call(this, size, cb), cb);
+			(async () => {
+				try {
+					const value = await promise;
+					await prepare(value);
+					reader.call(this, size, cb);
+				} catch (error) {
+					cb(error);
+				}
+			})();
+
 			return;
 		}
 
