@@ -29,15 +29,14 @@ const intoStream = input => {
 		iterator = shouldIterate ? input[Symbol.iterator]() : null;
 	}
 
-	return from(function reader(size, cb) {
+	return from(function reader(size, callback) {
 		if (promise) {
 			(async () => {
 				try {
-					const value = await promise;
-					await prepare(value);
-					reader.call(this, size, cb);
+					await prepare(await promise);
+					reader.call(this, size, callback);
 				} catch (error) {
-					cb(error);
+					callback(error);
 				}
 			})();
 
@@ -45,20 +44,20 @@ const intoStream = input => {
 		}
 
 		if (iterator) {
-			const obj = iterator.next();
-			setImmediate(cb, null, obj.done ? null : obj.value);
+			const object = iterator.next();
+			setImmediate(callback, null, object.done ? null : object.value);
 			return;
 		}
 
 		if (input.length === 0) {
-			setImmediate(cb, null, null);
+			setImmediate(callback, null, null);
 			return;
 		}
 
 		const chunk = input.slice(0, size);
 		input = input.slice(size);
 
-		setImmediate(cb, null, chunk);
+		setImmediate(callback, null, chunk);
 	});
 };
 
@@ -81,15 +80,14 @@ module.exports.obj = input => {
 		iterator = !promise && input[Symbol.iterator] ? input[Symbol.iterator]() : null;
 	}
 
-	return from.obj(function reader(size, cb) {
+	return from.obj(function reader(size, callback) {
 		if (promise) {
 			(async () => {
 				try {
-					const value = await promise;
-					await prepare(value);
-					reader.call(this, size, cb);
+					await prepare(await promise);
+					reader.call(this, size, callback);
 				} catch (error) {
-					cb(error);
+					callback(error);
 				}
 			})();
 
@@ -97,13 +95,13 @@ module.exports.obj = input => {
 		}
 
 		if (iterator) {
-			const obj = iterator.next();
-			setImmediate(cb, null, obj.done ? null : obj.value);
+			const object = iterator.next();
+			setImmediate(callback, null, object.done ? null : object.value);
 			return;
 		}
 
 		this.push(input);
 
-		setImmediate(cb, null, null);
+		setImmediate(callback, null, null);
 	});
 };
