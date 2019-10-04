@@ -41,13 +41,13 @@
 	],
 	"dependencies": {
 		"from2": "^2.3.0",
-		"p-is-promise": "^2.0.0"
+		"p-is-promise": "^3.0.0"
 	},
 	"devDependencies": {
-		"ava": "^1.4.1",
+		"ava": "^2.4.0",
 		"get-stream": "^5.0.0",
 		"p-event": "^4.1.0",
-		"tsd": "^0.7.2",
-		"xo": "^0.24.0"
+		"tsd": "^0.9.0",
+		"xo": "^0.25.3"
 	}
 }

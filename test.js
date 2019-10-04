@@ -28,8 +28,8 @@ test('buffer', async t => {
 test('ArrayBuffer', async t => {
 	const f = Buffer.from(fixture);
 	const view = new Uint8Array(f.length);
-	for (let i = 0; i < f.length; i++) {
-		view[i] = f[i];
+	for (const [i, element] of f.entries()) {
+		view[i] = element;
 	}
 
 	t.true((await getStream.buffer(intoStream(view.buffer))).equals(f));
@@ -38,8 +38,8 @@ test('ArrayBuffer', async t => {
 test('ArrayBuffer view', async t => {
 	const f = Buffer.from(fixture);
 	const view = new Uint8Array(f.length);
-	for (let i = 0; i < f.length; i++) {
-		view[i] = f[i];
+	for (const [i, element] of f.entries()) {
+		view[i] = element;
 	}
 
 	t.true((await getStream.buffer(intoStream(view))).equals(f));
