@@ -25,10 +25,13 @@ intoStream(Promise.resolve(new Uint8Array(Buffer.from('unicorn').buffer))).pipe(
 const object = {foo: true};
 const objectArray = new Set([object, {bar: true}]);
 const objectIterable = new Set(objectArray);
+const arrayOfArrays = [[object]];
 
 intoStream.object(object).pipe(process.stdout);
 intoStream.object(objectArray).pipe(process.stdout);
 intoStream.object(objectIterable).pipe(process.stdout);
+intoStream.object(arrayOfArrays).pipe(process.stdout);
 intoStream.object(Promise.resolve(object)).pipe(process.stdout);
 intoStream.object(Promise.resolve(objectArray)).pipe(process.stdout);
 intoStream.object(Promise.resolve(objectIterable)).pipe(process.stdout);
+intoStream.object(Promise.resolve(arrayOfArrays)).pipe(process.stdout);

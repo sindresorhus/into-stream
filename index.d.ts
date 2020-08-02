@@ -11,7 +11,7 @@ declare namespace intoStream {
 
 	type InputObject =
 		| {[key: string]: any}
-		| Iterable<{[key: string]: any}>;
+		| Iterable<any>;
 }
 
 declare const intoStream: {
