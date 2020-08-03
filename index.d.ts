@@ -1,7 +1,6 @@
 /// <reference types="node"/>
 import {Readable as ReadableStream} from 'stream';
 
-type Object = {[key: string]: any};
 declare namespace intoStream {
 	type Input =
 		| Buffer
@@ -11,8 +10,8 @@ declare namespace intoStream {
 		| Iterable<Buffer | string>;
 
 	type InputObject =
-		| Object
-		| Iterable<Object | Object[]>;
+		| object
+		| Iterable<object>;
 }
 
 declare const intoStream: {
