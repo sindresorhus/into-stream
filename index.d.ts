@@ -10,13 +10,25 @@ declare namespace intoStream {
 		| Iterable<Buffer | string>
 		| AsyncIterable<Buffer | string>;
 
+	/* eslint-disable @typescript-eslint/ban-types */
 	type InputObject =
 		| object
 		| Iterable<object>
 		| AsyncIterable<object>;
+	/* eslint-enable @typescript-eslint/ban-types */
 }
 
 declare const intoStream: {
+	/**
+	Convert object `input` into a stream.
+
+	@param input - The object input to convert to a stream.
+	@returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
+	*/
+	object: (
+		input: intoStream.InputObject | Promise<intoStream.InputObject>
+	) => ReadableStream;
+
 	/**
 	Convert `input` into a stream. Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
@@ -32,19 +44,6 @@ declare const intoStream: {
 	```
 	*/
 	(input: intoStream.Input | Promise<intoStream.Input>): ReadableStream;
-
-	/**
-	Convert object `input` into a stream.
-
-	@param input - The object input to convert to a stream.
-	@returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
-	*/
-	object(
-		input: intoStream.InputObject | Promise<intoStream.InputObject>
-	): ReadableStream;
-
-	// TODO: Remove this for the next major release
-	default: typeof intoStream;
 };
 
 export = intoStream;

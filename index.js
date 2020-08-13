@@ -79,8 +79,6 @@ const intoStream = input => {
 };
 
 module.exports = intoStream;
-// TODO: Remove this for the next major release
-module.exports.default = intoStream;
 
 module.exports.object = input => {
 	if (Array.isArray(input)) {
