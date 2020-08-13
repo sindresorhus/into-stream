@@ -7,11 +7,13 @@ declare namespace intoStream {
 		| NodeJS.TypedArray
 		| ArrayBuffer
 		| string
-		| Iterable<Buffer | string>;
+		| Iterable<Buffer | string>
+		| AsyncIterable<Buffer | string>;
 
 	type InputObject =
 		| object
-		| Iterable<object>;
+		| Iterable<object>
+		| AsyncIterable<object>;
 }
 
 declare const intoStream: {
