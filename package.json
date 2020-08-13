@@ -26,6 +26,8 @@
 		"object",
 		"array",
 		"iterable",
+		"async",
+		"asynciterable",
 		"promise",
 		"promises",
 		"from",
