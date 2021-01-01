@@ -1,4 +1,4 @@
-# into-stream [![Build Status](https://travis-ci.com/sindresorhus/into-stream.svg?branch=master)](https://travis-ci.com/github/sindresorhus/into-stream)
+# into-stream
 
 > Convert a string/promise/array/iterable/asynciterable/buffer/typedarray/arraybuffer/object into a stream
 
