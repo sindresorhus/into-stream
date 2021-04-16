@@ -1,4 +1,4 @@
-import intoStream = require('.');
+import intoStream from './index.js';
 
 const unicornArray = 'unicorn'.split('');
 

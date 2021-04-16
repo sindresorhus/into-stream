@@ -1,8 +1,7 @@
-'use strict';
-const from = require('from2');
-const pIsPromise = require('p-is-promise');
+import from2 from 'from2';
+import isPromise from 'p-is-promise';
 
-const intoStream = input => {
+export default function intoStream(input) {
 	if (Array.isArray(input)) {
 		input = input.slice();
 	}
@@ -23,7 +22,7 @@ const intoStream = input => {
 			input = Buffer.from(input);
 		}
 
-		promise = pIsPromise(input) ? input : null;
+		promise = isPromise(input) ? input : null;
 
 		// We don't iterate on strings and buffers since slicing them is ~7x faster
 		const shouldIterate = !promise && input[Symbol.iterator] && typeof input !== 'string' && !Buffer.isBuffer(input);
@@ -33,7 +32,7 @@ const intoStream = input => {
 		asyncIterator = shouldAsyncIterate ? input[Symbol.asyncIterator]() : null;
 	}
 
-	return from(function reader(size, callback) {
+	return from2(function reader(size, callback) {
 		if (promise) {
 			(async () => {
 				try {
@@ -76,11 +75,9 @@ const intoStream = input => {
 
 		setImmediate(callback, null, chunk);
 	});
-};
+}
 
-module.exports = intoStream;
-
-module.exports.object = input => {
+intoStream.object = input => {
 	if (Array.isArray(input)) {
 		input = input.slice();
 	}
@@ -93,12 +90,12 @@ module.exports.object = input => {
 
 	function prepare(value) {
 		input = value;
-		promise = pIsPromise(input) ? input : null;
+		promise = isPromise(input) ? input : null;
 		iterator = !promise && input[Symbol.iterator] ? input[Symbol.iterator]() : null;
 		asyncIterator = !promise && input[Symbol.asyncIterator] ? input[Symbol.asyncIterator]() : null;
 	}
 
-	return from.obj(function reader(size, callback) {
+	return from2.obj(function reader(size, callback) {
 		if (promise) {
 			(async () => {
 				try {

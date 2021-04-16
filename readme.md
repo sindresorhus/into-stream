@@ -13,7 +13,7 @@ $ npm install into-stream
 ## Usage
 
 ```js
-const intoStream = require('into-stream');
+import intoStream from 'into-stream';
 
 intoStream('unicorn').pipe(process.stdout);
 //=> 'unicorn'
