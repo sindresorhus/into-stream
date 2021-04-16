@@ -1,6 +1,6 @@
 {
 	"name": "into-stream",
-	"version": "6.0.0",
+	"version": "7.0.0",
 	"description": "Convert a string/promise/array/iterable/asynciterable/buffer/typedarray/arraybuffer/object into a stream",
 	"license": "MIT",
 	"repository": "sindresorhus/into-stream",
