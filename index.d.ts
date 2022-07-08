@@ -17,14 +17,6 @@ export type ObjectInput =
 
 declare const intoStream: {
 	/**
-	Convert object `input` into a stream.
-
-	@param input - The object input to convert to a stream.
-	@returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
-	*/
-	object: (input: ObjectInput | Promise<ObjectInput>) => ReadableStream;
-
-	/**
 	Convert `input` into a stream. Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
 	@param input - The input to convert to a stream.
@@ -39,6 +31,14 @@ declare const intoStream: {
 	```
 	*/
 	(input: Input | Promise<Input>): ReadableStream;
+
+	/**
+	Convert object `input` into a stream.
+
+	@param input - The object input to convert to a stream.
+	@returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
+	*/
+	object: (input: ObjectInput | Promise<ObjectInput>) => ReadableStream;
 };
 
 export default intoStream;
