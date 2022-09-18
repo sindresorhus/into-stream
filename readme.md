@@ -36,3 +36,4 @@ Returns: [Readable object stream](https://nodejs.org/api/stream.html#stream_obje
 ## Related
 
 - [to-readable-stream](https://github.com/sindresorhus/to-readable-stream) - Simpler version of this module
+- [get-stream](https://github.com/sindresorhus/get-stream) - The opposite of this module
