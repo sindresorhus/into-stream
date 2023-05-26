@@ -1,6 +1,8 @@
+import process from 'node:process';
+import {Buffer} from 'node:buffer';
 import intoStream from './index.js';
 
-const unicornArray = 'unicorn'.split('');
+const unicornArray = [...'unicorn'];
 
 function asyncGeneratorFrom<T>(array: T[]) {
 	return async function * () {
@@ -10,7 +12,7 @@ function asyncGeneratorFrom<T>(array: T[]) {
 
 function asyncIterableFrom<T>(array: T[]) {
 	return {
-		[Symbol.asyncIterator]: asyncGeneratorFrom(array)
+		[Symbol.asyncIterator]: asyncGeneratorFrom(array),
 	};
 }
 
@@ -26,12 +28,12 @@ intoStream(Promise.resolve('unicorn')).pipe(process.stdout);
 intoStream(Promise.resolve(unicornArray)).pipe(process.stdout);
 intoStream(Promise.resolve(new Set(unicornArray))).pipe(process.stdout);
 intoStream(Promise.resolve(new Set([Buffer.from('unicorn')]))).pipe(
-	process.stdout
+	process.stdout,
 );
 intoStream(Promise.resolve(Buffer.from('unicorn'))).pipe(process.stdout);
 intoStream(Promise.resolve(Buffer.from('unicorn').buffer)).pipe(process.stdout);
 intoStream(Promise.resolve(new Uint8Array(Buffer.from('unicorn').buffer))).pipe(
-	process.stdout
+	process.stdout,
 );
 
 intoStream(asyncGeneratorFrom(unicornArray)()).pipe(process.stdout);

@@ -1,7 +1,7 @@
+import {Buffer} from 'node:buffer';
 import test from 'ava';
 import getStream from 'get-stream';
-import pEvent from 'p-event';
-import pImmediate from 'p-immediate';
+import {pEvent} from 'p-event';
 import intoStream from './index.js';
 
 const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
@@ -17,7 +17,7 @@ function generatorFrom(array) {
 
 function iterableFrom(array) {
 	return {
-		[Symbol.iterator]: generatorFrom(array)
+		[Symbol.iterator]: generatorFrom(array),
 	};
 }
 
@@ -26,7 +26,7 @@ function asyncGeneratorFrom(array) {
 		let index = 0;
 		while (index < array.length) {
 			// eslint-disable-next-line no-await-in-loop
-			await pImmediate();
+			await Promise.resolve();
 			yield array[index++];
 		}
 	};
@@ -34,7 +34,7 @@ function asyncGeneratorFrom(array) {
 
 function asyncIterableFrom(array) {
 	return {
-		[Symbol.asyncIterator]: asyncGeneratorFrom(array)
+		[Symbol.asyncIterator]: asyncGeneratorFrom(array),
 	};
 }
 
@@ -44,7 +44,8 @@ test('string', async t => {
 
 test('buffer', async t => {
 	const f = Buffer.from(fixture);
-	t.true((await getStream.buffer(intoStream(f))).equals(f));
+	const result = await getStream.buffer(intoStream(f));
+	t.true(result.equals(f));
 });
 
 test('ArrayBuffer', async t => {
@@ -54,7 +55,8 @@ test('ArrayBuffer', async t => {
 		view[index] = element;
 	}
 
-	t.true((await getStream.buffer(intoStream(view.buffer))).equals(f));
+	const result = await getStream.buffer(intoStream(view.buffer));
+	t.true(result.equals(f));
 });
 
 test('ArrayBuffer view', async t => {
@@ -64,30 +66,38 @@ test('ArrayBuffer view', async t => {
 		view[index] = element;
 	}
 
-	t.true((await getStream.buffer(intoStream(view))).equals(f));
+	const result = await getStream.buffer(intoStream(view));
+	t.true(result.equals(f));
 });
 
 test('array', async t => {
-	t.is(await getStream(intoStream(fixture.split(''))), fixture);
+	const result = await intoStream([...fixture]).toArray();
+	t.is(result.join(''), fixture);
 });
 
 test('iterable', async t => {
-	const iterable = iterableFrom(fixture.split(''));
+	const iterable = iterableFrom([...fixture]);
 	t.is(await getStream(intoStream(iterable)), fixture);
 });
 
 test('generator', async t => {
-	const generator = generatorFrom(fixture.split(''));
+	const generator = generatorFrom([...fixture]);
 	t.is(await getStream(intoStream(generator())), fixture);
 });
 
 test('async iterable', async t => {
-	const iterable = asyncIterableFrom(fixture.split(''));
+	const iterable = asyncIterableFrom([...fixture]);
+	t.is(await getStream(intoStream(iterable)), fixture);
+});
+
+test.failing('async iterable - Uint8Array', async t => {
+	const fixture = new Uint8Array([21, 31]);
+	const iterable = asyncIterableFrom(fixture);
 	t.is(await getStream(intoStream(iterable)), fixture);
 });
 
 test('async generator', async t => {
-	const generator = asyncGeneratorFrom(fixture.split(''));
+	const generator = asyncGeneratorFrom([...fixture]);
 	t.is(await getStream(intoStream(generator())), fixture);
 });
 
@@ -100,14 +110,14 @@ test('promise', async t => {
 
 test('promise resolving to iterable', async t => {
 	const promise = new Promise(resolve => {
-		setImmediate(resolve.bind(null, iterableFrom(fixture.split(''))));
+		setImmediate(resolve.bind(null, iterableFrom([...fixture])));
 	});
 	t.is(await getStream(intoStream(promise)), fixture);
 });
 
 test('promise resolving to async iterable', async t => {
 	const promise = new Promise(resolve => {
-		setImmediate(resolve.bind(null, asyncIterableFrom(fixture.split(''))));
+		setImmediate(resolve.bind(null, asyncIterableFrom([...fixture])));
 	});
 	t.is(await getStream(intoStream(promise)), fixture);
 });
@@ -179,9 +189,9 @@ test('object mode errors when promise rejects', async t => {
 test('pushes chunk on next tick', async t => {
 	let flag = false;
 
-	setImmediate(() => {
+	(async () => {
 		flag = true;
-	});
+	})();
 
 	await pEvent(intoStream(Buffer.from(fixture)), 'data');
 

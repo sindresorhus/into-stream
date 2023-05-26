@@ -1,4 +1,5 @@
-import {Readable as ReadableStream} from 'stream';
+import {type Readable as ReadableStream} from 'node:stream';
+import {type Buffer} from 'node:buffer';
 
 export type Input =
 	| Buffer
@@ -20,7 +21,7 @@ declare const intoStream: {
 	Convert `input` into a stream. Adheres to the requested chunk size, except for `array` where each element will be a chunk.
 
 	@param input - The input to convert to a stream.
-	@returns A [readable stream](https://nodejs.org/api/stream.html#stream_class_stream_readable).
+	@returns A [readable stream](https://nodejs.org/api/stream.html#class-streamreadable).
 
 	@example
 	```
@@ -36,7 +37,7 @@ declare const intoStream: {
 	Convert object `input` into a stream.
 
 	@param input - The object input to convert to a stream.
-	@returns A [readable object stream](https://nodejs.org/api/stream.html#stream_object_mode).
+	@returns A [readable object stream](https://nodejs.org/api/stream.html#object-mode).
 	*/
 	object: (input: ObjectInput | Promise<ObjectInput>) => ReadableStream;
 };

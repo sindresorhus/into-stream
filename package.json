@@ -13,7 +13,7 @@
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
-		"node": ">=12"
+		"node": ">=16"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -43,16 +43,11 @@
 		"gulpfriendly",
 		"value"
 	],
-	"dependencies": {
-		"from2": "^2.3.0",
-		"p-is-promise": "^3.0.0"
-	},
 	"devDependencies": {
-		"ava": "^3.15.0",
+		"ava": "^5.3.0",
 		"get-stream": "^6.0.1",
-		"p-event": "^4.2.0",
-		"p-immediate": "^4.0.0",
-		"tsd": "^0.14.0",
-		"xo": "^0.38.2"
+		"p-event": "^5.0.1",
+		"tsd": "^0.28.1",
+		"xo": "^0.54.2"
 	}
 }
