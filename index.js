@@ -2,6 +2,10 @@ import {Readable as ReadableStream} from 'node:stream';
 import {Buffer} from 'node:buffer';
 
 function baseIntoStream(isObjectMode, input) {
+	if (input === undefined || input === null) {
+		throw new TypeError('Input should not be undefined or null.');
+	}
+
 	async function * reader() {
 		let value = await input;
 
