@@ -9,12 +9,10 @@ export type Input =
 	| Iterable<Buffer | string | NodeJS.TypedArray>
 	| AsyncIterable<Buffer | string | NodeJS.TypedArray>;
 
-/* eslint-disable @typescript-eslint/ban-types */
 export type ObjectInput =
-	| object
-	| Iterable<object>
-	| AsyncIterable<object>;
-/* eslint-enable @typescript-eslint/ban-types */
+	| Record<string, unknown>
+	| Iterable<Record<string, unknown>>
+	| AsyncIterable<Record<string, unknown>>;
 
 declare const intoStream: {
 	/**

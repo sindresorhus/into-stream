@@ -27,14 +27,10 @@ intoStream(new Uint8Array(Buffer.from('unicorn').buffer)).pipe(process.stdout);
 intoStream(Promise.resolve('unicorn')).pipe(process.stdout);
 intoStream(Promise.resolve(unicornArray)).pipe(process.stdout);
 intoStream(Promise.resolve(new Set(unicornArray))).pipe(process.stdout);
-intoStream(Promise.resolve(new Set([Buffer.from('unicorn')]))).pipe(
-	process.stdout,
-);
+intoStream(Promise.resolve(new Set([Buffer.from('unicorn')]))).pipe(process.stdout);
 intoStream(Promise.resolve(Buffer.from('unicorn'))).pipe(process.stdout);
 intoStream(Promise.resolve(Buffer.from('unicorn').buffer)).pipe(process.stdout);
-intoStream(Promise.resolve(new Uint8Array(Buffer.from('unicorn').buffer))).pipe(
-	process.stdout,
-);
+intoStream(Promise.resolve(new Uint8Array(Buffer.from('unicorn').buffer))).pipe(process.stdout);
 
 intoStream(asyncGeneratorFrom(unicornArray)()).pipe(process.stdout);
 intoStream(asyncIterableFrom(unicornArray)).pipe(process.stdout);
