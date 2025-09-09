@@ -31,6 +31,10 @@ Returns: [Readable stream](https://nodejs.org/api/stream.html#class-streamreadab
 Type: `object | Iterable<object> | AsyncIterable<object> | Promise`\
 Returns: [Readable object stream](https://nodejs.org/api/stream.html#object-mode)
 
+## Limitations
+
+The streams returned by this package cannot be used with the `stdio` option of Node.js [`child_process`](https://nodejs.org/api/child_process.html) methods. Use [`fs.createReadStream()`](https://nodejs.org/api/fs.html#fscreatereadstreampath-options) instead.
+
 ## Related
 
 - [to-readable-stream](https://github.com/sindresorhus/to-readable-stream) - Simpler version of this package
