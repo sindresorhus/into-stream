@@ -23,7 +23,7 @@ intoStream('unicorn').pipe(process.stdout);
 
 ### intoStream(input)
 
-Type: `Buffer | TypedArray | ArrayBuffer | string | Iterable<Buffer | string> | AsyncIterable<Buffer | string> | Promise`\
+Type: `Buffer | TypedArray | ArrayBuffer | string | Iterable<Buffer | string | TypedArray> | AsyncIterable<Buffer | string | TypedArray> | Promise`\
 Returns: [Readable stream](https://nodejs.org/api/stream.html#class-streamreadable)
 
 ### intoStream.object(input)

@@ -17,28 +17,40 @@ function baseIntoStream(isObjectMode, input) {
 			value = [...value];
 		}
 
-		if (
-			!isObjectMode
-			&& (
-				value instanceof ArrayBuffer
-				|| (ArrayBuffer.isView(value) && !Buffer.isBuffer(value))
-			)
-		) {
+		// Convert ArrayBuffer/TypedArray to Buffer
+		if (!isObjectMode && (value instanceof ArrayBuffer || (ArrayBuffer.isView(value) && !Buffer.isBuffer(value)))) {
 			value = Buffer.from(value);
 		}
 
-		// We don't iterate on strings and buffers since yielding them is ~7x faster.
+		const convertElement = element => {
+			if (isObjectMode) {
+				return element;
+			}
+
+			if (ArrayBuffer.isView(element) && !Buffer.isBuffer(element)) {
+				return Buffer.from(element);
+			}
+
+			if (typeof element === 'number') {
+				return Buffer.from([element]);
+			}
+
+			return element;
+		};
+
+		// Handle iterables
 		if (typeof value !== 'string' && !Buffer.isBuffer(value) && value?.[Symbol.iterator]) {
 			for (const element of value) {
-				yield element;
+				yield convertElement(element);
 			}
 
 			return;
 		}
 
+		// Handle async iterables
 		if (value?.[Symbol.asyncIterator]) {
 			for await (const element of value) {
-				yield await element;
+				yield convertElement(await element);
 			}
 
 			return;

@@ -6,8 +6,8 @@ export type Input =
 	| NodeJS.TypedArray
 	| ArrayBuffer
 	| string
-	| Iterable<Buffer | string>
-	| AsyncIterable<Buffer | string>;
+	| Iterable<Buffer | string | NodeJS.TypedArray>
+	| AsyncIterable<Buffer | string | NodeJS.TypedArray>;
 
 /* eslint-disable @typescript-eslint/ban-types */
 export type ObjectInput =
