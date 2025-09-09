@@ -1,10 +1,14 @@
 import {Buffer} from 'node:buffer';
 import test from 'ava';
-import getStream from 'get-stream';
+import getStream, {getStreamAsBuffer, getStreamAsArray} from 'get-stream';
 import {pEvent} from 'p-event';
 import intoStream from './index.js';
 
-const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
+const fixture = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. '
+	+ 'Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. '
+	+ 'Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. '
+	+ 'Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, '
+	+ 'imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.';
 
 function generatorFrom(array) {
 	return function * () {
@@ -44,8 +48,9 @@ test('string', async t => {
 
 test('buffer', async t => {
 	const f = Buffer.from(fixture);
-	const result = await getStream.buffer(intoStream(f));
-	t.true(result.equals(f));
+	const result = await getStreamAsBuffer(intoStream(f));
+	// Result should be Uint8Array, so we convert to Buffer for comparison
+	t.true(Buffer.from(result).equals(f));
 });
 
 test('ArrayBuffer', async t => {
@@ -55,8 +60,8 @@ test('ArrayBuffer', async t => {
 		view[index] = element;
 	}
 
-	const result = await getStream.buffer(intoStream(view.buffer));
-	t.true(result.equals(f));
+	const result = await getStreamAsBuffer(intoStream(view.buffer));
+	t.true(Buffer.from(result).equals(f));
 });
 
 test('ArrayBuffer view', async t => {
@@ -66,8 +71,8 @@ test('ArrayBuffer view', async t => {
 		view[index] = element;
 	}
 
-	const result = await getStream.buffer(intoStream(view));
-	t.true(result.equals(f));
+	const result = await getStreamAsBuffer(intoStream(view));
+	t.true(Buffer.from(result).equals(f));
 });
 
 test('array', async t => {
@@ -134,22 +139,22 @@ test('stream errors when promise rejects', async t => {
 
 test('object mode', async t => {
 	const f = {foo: true};
-	t.deepEqual(await getStream.array(intoStream.object(f)), [f]);
+	t.deepEqual(await getStreamAsArray(intoStream.object(f)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
-	t.deepEqual(await getStream.array(intoStream.object(f2)), f2);
+	t.deepEqual(await getStreamAsArray(intoStream.object(f2)), f2);
 });
 
 test('object mode from iterable', async t => {
 	const values = [{foo: true}, {bar: true}];
 	const iterable = iterableFrom(values);
-	t.deepEqual(await getStream.array(intoStream.object(iterable)), values);
+	t.deepEqual(await getStreamAsArray(intoStream.object(iterable)), values);
 });
 
 test('object mode from async iterable', async t => {
 	const values = [{foo: true}, {bar: true}];
 	const iterable = asyncIterableFrom(values);
-	t.deepEqual(await getStream.array(intoStream.object(iterable)), values);
+	t.deepEqual(await getStreamAsArray(intoStream.object(iterable)), values);
 });
 
 test('object mode from promise', async t => {
@@ -157,13 +162,13 @@ test('object mode from promise', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f));
 	});
-	t.deepEqual(await getStream.array(intoStream.object(promise)), [f]);
+	t.deepEqual(await getStreamAsArray(intoStream.object(promise)), [f]);
 
 	const f2 = [{foo: true}, {bar: true}];
 	const promise2 = new Promise(resolve => {
 		setImmediate(resolve.bind(null, f2));
 	});
-	t.deepEqual(await getStream.array(intoStream.object(promise2)), f2);
+	t.deepEqual(await getStreamAsArray(intoStream.object(promise2)), f2);
 });
 
 test('object mode from promise resolving to iterable', async t => {
@@ -171,7 +176,7 @@ test('object mode from promise resolving to iterable', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, iterableFrom([{foo: true}, {bar: true}])));
 	});
-	t.deepEqual(await getStream.array(intoStream.object(promise)), values);
+	t.deepEqual(await getStreamAsArray(intoStream.object(promise)), values);
 });
 
 test('object mode from promise resolving to async iterable', async t => {
@@ -179,14 +184,14 @@ test('object mode from promise resolving to async iterable', async t => {
 	const promise = new Promise(resolve => {
 		setImmediate(resolve.bind(null, asyncIterableFrom([{foo: true}, {bar: true}])));
 	});
-	t.deepEqual(await getStream.array(intoStream.object(promise)), values);
+	t.deepEqual(await getStreamAsArray(intoStream.object(promise)), values);
 });
 
 test('object mode errors when promise rejects', async t => {
 	const promise = new Promise((resolve, reject) => {
 		setImmediate(reject.bind(null, new Error('test error')));
 	});
-	await t.throwsAsync(getStream.array(intoStream.object(promise)), {message: 'test error'});
+	await t.throwsAsync(getStreamAsArray(intoStream.object(promise)), {message: 'test error'});
 });
 
 test('pushes chunk on next tick', async t => {
@@ -214,8 +219,8 @@ test('Uint8Array in iterables', async t => {
 		yield new Uint8Array([32, 87, 111, 114, 108, 100]); // " World"
 	}
 
-	const syncResult = await getStream.buffer(intoStream(syncGen()));
-	const asyncResult = await getStream.buffer(intoStream(asyncGen()));
+	const syncResult = await getStreamAsBuffer(intoStream(syncGen()));
+	const asyncResult = await getStreamAsBuffer(intoStream(asyncGen()));
 
 	t.is(syncResult.toString(), 'Hello');
 	t.is(asyncResult.toString(), 'Hello World');

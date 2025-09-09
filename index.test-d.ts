@@ -1,5 +1,4 @@
 import process from 'node:process';
-import {Buffer} from 'node:buffer';
 import intoStream from './index.js';
 
 const unicornArray = [...'unicorn'];
@@ -19,18 +18,19 @@ function asyncIterableFrom<T>(array: T[]) {
 intoStream('unicorn').pipe(process.stdout);
 intoStream(unicornArray).pipe(process.stdout);
 intoStream(new Set(unicornArray)).pipe(process.stdout);
-intoStream(new Set([Buffer.from('unicorn')])).pipe(process.stdout);
-intoStream(Buffer.from('unicorn')).pipe(process.stdout);
-intoStream(Buffer.from('unicorn').buffer).pipe(process.stdout);
-intoStream(new Uint8Array(Buffer.from('unicorn').buffer)).pipe(process.stdout);
+intoStream(new Set([new Uint8Array([117, 110, 105, 99, 111, 114, 110])])).pipe(process.stdout);
+intoStream(new Uint8Array([117, 110, 105, 99, 111, 114, 110])).pipe(process.stdout);
+intoStream(new Int16Array([117, 110])).pipe(process.stdout);
+intoStream(new Float32Array([1.1, 2.2])).pipe(process.stdout);
+intoStream(new ArrayBuffer(8)).pipe(process.stdout);
 
 intoStream(Promise.resolve('unicorn')).pipe(process.stdout);
 intoStream(Promise.resolve(unicornArray)).pipe(process.stdout);
 intoStream(Promise.resolve(new Set(unicornArray))).pipe(process.stdout);
-intoStream(Promise.resolve(new Set([Buffer.from('unicorn')]))).pipe(process.stdout);
-intoStream(Promise.resolve(Buffer.from('unicorn'))).pipe(process.stdout);
-intoStream(Promise.resolve(Buffer.from('unicorn').buffer)).pipe(process.stdout);
-intoStream(Promise.resolve(new Uint8Array(Buffer.from('unicorn').buffer))).pipe(process.stdout);
+intoStream(Promise.resolve(new Set([new Uint8Array([117, 110, 105, 99, 111, 114, 110])]))).pipe(process.stdout);
+intoStream(Promise.resolve(new Uint8Array([117, 110, 105, 99, 111, 114, 110]))).pipe(process.stdout);
+intoStream(Promise.resolve(new Int16Array([117, 110]))).pipe(process.stdout);
+intoStream(Promise.resolve(new ArrayBuffer(8))).pipe(process.stdout);
 
 intoStream(asyncGeneratorFrom(unicornArray)()).pipe(process.stdout);
 intoStream(asyncIterableFrom(unicornArray)).pipe(process.stdout);

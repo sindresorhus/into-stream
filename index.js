@@ -1,5 +1,4 @@
 import {Readable as ReadableStream} from 'node:stream';
-import {Buffer} from 'node:buffer';
 
 function baseIntoStream(isObjectMode, input) {
 	if (input === undefined || input === null) {
@@ -17,9 +16,9 @@ function baseIntoStream(isObjectMode, input) {
 			value = [...value];
 		}
 
-		// Convert ArrayBuffer/TypedArray to Buffer
-		if (!isObjectMode && (value instanceof ArrayBuffer || (ArrayBuffer.isView(value) && !Buffer.isBuffer(value)))) {
-			value = Buffer.from(value);
+		// Convert ArrayBuffer/TypedArray to Uint8Array
+		if (!isObjectMode && (value instanceof ArrayBuffer || ArrayBuffer.isView(value))) {
+			value = new Uint8Array(value);
 		}
 
 		const convertElement = element => {
@@ -27,19 +26,19 @@ function baseIntoStream(isObjectMode, input) {
 				return element;
 			}
 
-			if (ArrayBuffer.isView(element) && !Buffer.isBuffer(element)) {
-				return Buffer.from(element);
+			if (ArrayBuffer.isView(element)) {
+				return new Uint8Array(element);
 			}
 
 			if (typeof element === 'number') {
-				return Buffer.from([element]);
+				return new Uint8Array([element]);
 			}
 
 			return element;
 		};
 
 		// Handle iterables
-		if (typeof value !== 'string' && !Buffer.isBuffer(value) && value?.[Symbol.iterator]) {
+		if (typeof value !== 'string' && !ArrayBuffer.isView(value) && value?.[Symbol.iterator]) {
 			for (const element of value) {
 				yield convertElement(element);
 			}

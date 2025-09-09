@@ -1,18 +1,19 @@
 import {type Readable as ReadableStream} from 'node:stream';
-import {type Buffer} from 'node:buffer';
 
 export type Input =
-	| Buffer
+	| Uint8Array
 	| NodeJS.TypedArray
 	| ArrayBuffer
 	| string
-	| Iterable<Buffer | string | NodeJS.TypedArray>
-	| AsyncIterable<Buffer | string | NodeJS.TypedArray>;
+	| Iterable<string | Uint8Array | NodeJS.TypedArray>
+	| AsyncIterable<string | Uint8Array | NodeJS.TypedArray>;
 
+/* eslint-disable @typescript-eslint/no-restricted-types */
 export type ObjectInput =
-	| Record<string, unknown>
-	| Iterable<Record<string, unknown>>
-	| AsyncIterable<Record<string, unknown>>;
+	| object
+	| Iterable<object>
+	| AsyncIterable<object>;
+/* eslint-enable @typescript-eslint/no-restricted-types */
 
 declare const intoStream: {
 	/**
