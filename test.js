@@ -104,6 +104,12 @@ test('async iterable - Uint8Array elements iterate as numbers', async t => {
 	t.is(result, 'AB');
 });
 
+test('readable stream', async t => {
+	const {Readable} = await import('node:stream');
+	const readable = Readable.from(['hello', ' ', 'world']);
+	t.is(await getStream(intoStream(readable)), 'hello world');
+});
+
 test('async generator', async t => {
 	const generator = asyncGeneratorFrom([...fixture]);
 	t.is(await getStream(intoStream(generator())), fixture);
