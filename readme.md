@@ -1,6 +1,6 @@
 # into-stream
 
-> Convert a string/promise/array/iterable/asynciterable/uint8array/typedarray/arraybuffer/object into a stream
+> Convert a string/promise/array/iterable/asynciterable/uint8array/typedarray/arraybuffer/readablestream/object into a stream
 
 Correctly handles backpressure.
 
@@ -23,7 +23,7 @@ intoStream('unicorn').pipe(process.stdout);
 
 ### intoStream(input)
 
-Type: `Uint8Array | TypedArray | ArrayBuffer | string | Iterable<string | Uint8Array | TypedArray> | AsyncIterable<string | Uint8Array | TypedArray> | Promise`\
+Type: `Uint8Array | TypedArray | ArrayBuffer | string | Iterable<string | Uint8Array | TypedArray> | AsyncIterable<string | Uint8Array | TypedArray> | ReadableStream | Promise`\
 Returns: [Readable stream](https://nodejs.org/api/stream.html#class-streamreadable)
 
 ### intoStream.object(input)

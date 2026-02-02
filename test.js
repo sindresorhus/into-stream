@@ -104,6 +104,17 @@ test('async iterable - Uint8Array elements iterate as numbers', async t => {
 	t.is(result, 'AB');
 });
 
+test('web ReadableStream', async t => {
+	const webStream = new ReadableStream({
+		start(controller) {
+			controller.enqueue('hello ');
+			controller.enqueue('world');
+			controller.close();
+		},
+	});
+	t.is(await getStream(intoStream(webStream)), 'hello world');
+});
+
 test('readable stream', async t => {
 	const {Readable} = await import('node:stream');
 	const readable = Readable.from(['hello', ' ', 'world']);
